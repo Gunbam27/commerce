@@ -1,4 +1,4 @@
-import Logo from "./Logo";
+import Logo from "../common/Logo";
 import { ChevronDown, CircleUserRound, Search, ShoppingCart } from "lucide-react";
 
 export default function NavBar() {

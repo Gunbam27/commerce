@@ -13,6 +13,7 @@ module.exports = {
         black: "#000000",
         gray: {
           500: "#909090",
+          600:"#616060",
         },
       },
       fontFamily: {
