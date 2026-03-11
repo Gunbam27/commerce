@@ -5,9 +5,10 @@ interface StarRateProps {
     maxRating?: number;
 }
 
-export default function StarRate({ rating, maxRating = 5 }: StarRateProps) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+export default function StarRate({ rating = 0, maxRating = 5 }: StarRateProps) {
+    const validRating = isNaN(rating) ? 0 : Math.max(0, rating);
+    const fullStars = Math.floor(validRating);
+    const hasHalfStar = validRating % 1 !== 0;
     const emptyStars = Math.max(0, maxRating - fullStars - (hasHalfStar ? 1 : 0));
 
     return (

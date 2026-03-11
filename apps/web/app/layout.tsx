@@ -1,4 +1,8 @@
+import PromoBanner from "../components/common/PromoBanner";
+import NavBar from "../components/layout/NavBar";
+import Footer from "../components/layout/Footer";
 import type { Metadata } from "next";
+
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -25,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${satoshi.variable} ${integral.variable} font-sans`}>
+        <PromoBanner />
+        <NavBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
