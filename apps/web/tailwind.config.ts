@@ -8,13 +8,19 @@ module.exports = {
     "../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      screens: {
+        "2xl": "1240px",
+      },
+    },
     extend: {
       colors: {
         white: "#FFFFFF",
         black: "#000000",
         gray: {
           500: "#909090",
-          600:"#616060",
+          600: "#616060",
         },
       },
       fontFamily: {

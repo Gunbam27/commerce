@@ -1,7 +1,12 @@
 import React from 'react';
-import { ChevronRight, SlidersHorizontal, ChevronUp } from 'lucide-react';
+import { ChevronRight, SlidersHorizontal, ChevronUp, X } from 'lucide-react';
 
-export default function FilterSidebar() {
+interface FilterSidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
     const categories = ['T-shirts', 'Shorts', 'Shirts', 'Hoodie', 'Jeans'];
     const colors = [
         'bg-[#00C12B]', 'bg-[#F50606]', 'bg-[#F5DD06]', 'bg-[#F57906]', 'bg-[#06CAF5]',
@@ -10,11 +15,19 @@ export default function FilterSidebar() {
     const sizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
     const dressStyles = ['Casual', 'Formal', 'Party', 'Gym'];
 
+    const sidebarClasses = `
+        fixed inset-0 z-[100] bg-white p-6 overflow-y-auto transition-transform duration-300 lg:static lg:z-0 lg:translate-y-0 lg:flex lg:flex-col lg:max-w-[295px] lg:shrink-0 lg:border lg:border-gray-100 lg:rounded-[20px] lg:h-fit lg:sticky lg:top-24
+        ${isOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
+    `;
+
     return (
-        <aside className="hidden lg:flex flex-col max-w-[295px] shrink-0 border border-gray-100 rounded-[20px] p-6 h-fit sticky top-24">
+        <aside className={sidebarClasses}>
             <div className="flex justify-between items-center mb-6 pb-6 border-b border-gray-100">
                 <h2 className="font-bold text-xl">Filters</h2>
-                <SlidersHorizontal size={20} className="text-gray-400" />
+                <button onClick={onClose} className="lg:hidden">
+                    <X size={24} />
+                </button>
+                <SlidersHorizontal size={20} className="hidden lg:block text-gray-400" />
             </div>
 
             {/* Categories */}

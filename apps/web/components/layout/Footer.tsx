@@ -3,7 +3,7 @@ import { Twitter, Facebook, Instagram, Github } from "lucide-react";
 export default function Footer() {
     return (
         <footer className="bg-[#F0F0F0] pt-16 pb-8">
-            <div className="max-w-[1440px] mx-auto px-4 lg:px-[100px]">
+            <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     {/* Brand Section */}
                     <div className="lg:col-span-4 flex flex-col items-start">

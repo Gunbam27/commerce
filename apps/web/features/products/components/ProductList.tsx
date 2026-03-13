@@ -18,17 +18,6 @@ export default function ProductList() {
 
     return (
         <div className="flex-1">
-            <div className="flex justify-between items-baseline mb-8">
-                <h1 className="text-2xl md:text-3xl font-bold">Casual</h1>
-                <div className="flex items-center gap-3 text-sm text-gray-500">
-                    <span>Showing 1-10 of 100 Products</span>
-                    <div className="hidden md:flex items-center gap-1 cursor-pointer hover:text-black">
-                        <span>Sort by: <span className="text-black font-medium">Most Popular</span></span>
-                        <ChevronDown size={16} />
-                    </div>
-                </div>
-            </div>
-
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-5 md:gap-y-10 mb-12">
                 {products.map((product) => (
                     <ProductCard key={product.id} {...product} />

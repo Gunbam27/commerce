@@ -31,7 +31,11 @@ export default function Review() {
 
     const scroll = (direction: "left" | "right") => {
         if (scrollRef.current) {
-            const scrollAmount = 400; // Average card width
+            const firstCard = scrollRef.current.firstElementChild as HTMLElement;
+            const cardWidth = firstCard?.offsetWidth || 400;
+            const gap = 20; // gap-5 is 20px
+            const scrollAmount = cardWidth + gap;
+            
             scrollRef.current.scrollBy({
                 left: direction === "left" ? -scrollAmount : scrollAmount,
                 behavior: "smooth"
@@ -40,49 +44,42 @@ export default function Review() {
     };
 
     return (
-        <section className="max-w-[1440px] mx-auto pt-16 pb-20 px-4 lg:px-[100px] overflow-hidden">
-            <style jsx>{`
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-                .no-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-            `}</style>
-            
-            <div className="flex items-end justify-between mb-10">
-                <h2 className="text-3xl md:text-5xl font-bold font-integral text-black uppercase">
-                    OUR HAPPY CUSTOMERS
-                </h2>
-                <div className="flex gap-4">
-                    <button 
-                        onClick={() => scroll("left")}
-                        className="w-6 h-6 flex items-center justify-center hover:opacity-50 transition-opacity"
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
-                    <button 
-                        onClick={() => scroll("right")}
-                        className="w-6 h-6 flex items-center justify-center hover:opacity-50 transition-opacity"
-                    >
-                        <ArrowRight size={24} />
-                    </button>
-                </div>
-            </div>
+        <section className="mx-1">
 
-            <div 
-                ref={scrollRef}
-                className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 scroll-smooth"
-            >
-                {REVIEWS.map((review, index) => (
-                    <ReviewCard 
-                        key={index}
-                        name={review.name}
-                        rating={review.rating}
-                        review={review.review}
-                    />
-                ))}
+            <div className="container pt-16 pb-20 overflow-hidden">
+                <div className="flex items-end justify-between mb-10">
+                    <h2 className="text-3xl md:text-5xl font-bold font-integral text-black uppercase">
+                        OUR HAPPY CUSTOMERS
+                    </h2>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={() => scroll("left")}
+                            className="w-6 h-6 flex items-center justify-center hover:opacity-50 transition-opacity"
+                        >
+                            <ArrowLeft size={24} />
+                        </button>
+                        <button 
+                            onClick={() => scroll("right")}
+                            className="w-6 h-6 flex items-center justify-center hover:opacity-50 transition-opacity"
+                        >
+                            <ArrowRight size={24} />
+                        </button>
+                    </div>
+                </div>
+
+                <div 
+                    ref={scrollRef}
+                    className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 scroll-smooth snap-x snap-mandatory scroll-px-4"
+                >
+                    {REVIEWS.map((review, index) => (
+                        <ReviewCard 
+                            key={index}
+                            name={review.name}
+                            rating={review.rating}
+                            review={review.review}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
     );

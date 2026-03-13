@@ -10,7 +10,7 @@ interface ReviewCardProps {
 
 export default function ReviewCard({ name, rating, review, isVerified = true }: ReviewCardProps) {
     return (
-        <div className="min-w-[340px] md:min-w-[400px] bg-white border border-black/10 rounded-[20px] p-7 md:p-8 flex flex-col gap-3 h-full">
+        <div className="min-w-[340px] md:min-w-[400px] bg-white border border-black/10 rounded-[20px] p-7 md:p-8 flex flex-col gap-3 h-full snap-start">
             <StarRate rating={rating} />
             <div className="flex items-center gap-1 mt-1">
                 <span className="font-bold text-xl text-black">{name}</span>
