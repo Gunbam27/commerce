@@ -42,8 +42,27 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };
+    
+    // 유저 정보에서 패스워드 제거
+    const { password: _, ...userWithoutPassword } = user;
+
     return {
-      accessToken: await this.jwtService.signAsync(payload),
+      user: userWithoutPassword,
+      accessToken: await this.jwtService.signAsync(payload, { expiresIn: '1h' }),
+      refreshToken: await this.jwtService.signAsync(payload, { expiresIn: '7d' }),
     };
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const newPayload = { sub: payload.sub, email: payload.email, role: payload.role };
+      
+      return {
+        accessToken: await this.jwtService.signAsync(newPayload, { expiresIn: '1h' }),
+      };
+    } catch {
+      throw new UnauthorizedException('REFRESH_TOKEN_EXPIRED');
+    }
   }
 }

@@ -3,9 +3,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Cookie Parser
+  app.use(cookieParser());
 
   // Validation Pipe
   app.useGlobalPipes(new ValidationPipe({
@@ -15,7 +19,10 @@ async function bootstrap() {
   }));
 
   // CORS Enable
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
 
   // Swagger Configuration
   const config = new DocumentBuilder()
