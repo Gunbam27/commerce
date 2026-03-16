@@ -1,26 +1,29 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import { ChevronDown, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useProducts } from '../api/useProducts';
 
 export default function ProductList() {
-    // Mock data based on the screenshot
-    const products = [
-        { id: 1, name: "Gradient Graphic T-shirt", price: 145, rating: 3.5, image: "/assets/clothes.png" },
-        { id: 2, name: "Polo with Tipping Details", price: 180, rating: 4.5, image: "/assets/clothes.png" },
-        { id: 3, name: "Black Striped T-shirt", price: 120, rating: 5.0, image: "/assets/clothes.png" },
-        { id: 4, name: "Skinny Fit Jeans", price: 240, rating: 3.5, image: "/assets/clothes.png" },
-        { id: 5, name: "Checkered Shirt", price: 180, rating: 4.5, image: "/assets/clothes.png" },
-        { id: 6, name: "Sleeve Striped T-shirt", price: 130, rating: 4.5, image: "/assets/clothes.png" },
-        { id: 7, name: "Vertical Striped Shirt", price: 212, rating: 5.0, image: "/assets/clothes.png" },
-        { id: 8, name: "Courage Graphic T-shirt", price: 145, rating: 4.0, image: "/assets/clothes.png" },
-        { id: 9, name: "Loose Fit Bermuda Shorts", price: 80, rating: 3.0, image: "/assets/clothes.png" },
-    ];
+    const {data,isLoading,isError} = useProducts();
 
+    if(isLoading){
+        return <div>Loading...</div>
+    }
+    if(isError){
+        return <div>Error</div>
+    }
+    const products = data?.items || []; 
+    const totalItems = data?.total || 0;
+    const totalPages = Math.ceil(totalItems / 12);
+    const currentPage = 1;
+    const hasMorePages = currentPage < totalPages;      
     return (
         <div className="flex-1">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-5 md:gap-y-10 mb-12">
+
+                {/* Todo: 서버에 rating넣기*/}
                 {products.map((product) => (
-                    <ProductCard key={product.id} {...product} />
+                    <ProductCard key={product.id} id={product.id} name={product.name} price={product.price} image={product.images?.[0] || ''} rating={4.5} />
                 ))}
             </div>
 

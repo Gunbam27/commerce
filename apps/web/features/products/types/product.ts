@@ -7,3 +7,8 @@ export type Product = components["schemas"]["CreateProductDto"] & {
 export type Category = components["schemas"]["CreateCategoryDto"] & {
     id: number;
 };
+
+export interface ProductsResponse {
+    items: Product[];
+    total: number;
+}
