@@ -1,14 +1,6 @@
-import { components } from "../../../src/api/schema";
+import { components } from "@/src/api/schema";
 
-export type Product = components["schemas"]["CreateProductDto"] & {
-    id: number;
-};
+export type Product = components["schemas"]["ProductDto"];
+export type Category = components["schemas"]["CreateCategoryDto"] & { id: number };
 
-export type Category = components["schemas"]["CreateCategoryDto"] & {
-    id: number;
-};
-
-export interface ProductsResponse {
-    items: Product[];
-    total: number;
-}
+export type ProductsResponse = components["schemas"]["ProductsResponseDto"];

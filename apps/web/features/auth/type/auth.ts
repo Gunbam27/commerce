@@ -1,28 +1,11 @@
-export interface SignUpResponse {
-    message: string;
-    userId: number;
-}
+import { components } from "@/src/api/schema";
 
-export interface SignUpRequest {
-    name: string;
-    email: string;
-    password: string;
-}
+export type SignUpResponse = components["schemas"]["SignupResponseDto"];
+export type SignUpRequest = components["schemas"]["SignUpDto"];
+export type LoginRequest = components["schemas"]["LoginDto"];
+export type LoginResponse = components["schemas"]["LoginResponseDto"];
 
-export interface LoginRequest {
-    email: string;
-    password: string;
-}
-
-export interface LoginResponse {
-    accessToken: string;
-}
-
-export interface User {
-    id: number;
-    email: string;
-    name: string;
-    role: string;
-}
+export type User = components["schemas"]["UserDto"];
+export type Role = User["role"];
 
 export type ProfileResponse = User;

@@ -54,6 +54,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/profile": {
         parameters: {
             query?: never;
@@ -228,11 +260,39 @@ export interface components {
             /** @example John Doe */
             name?: string;
         };
+        SignupResponseDto: {
+            /** @example User registered successfully */
+            message: string;
+            /** @example 1 */
+            userId: number;
+        };
         LoginDto: {
             /** @example user@example.com */
             email: string;
             /** @example password123 */
             password: string;
+        };
+        UserDto: {
+            /** @example 1 */
+            id: number;
+            /** @example user@example.com */
+            email: string;
+            /** @example John Doe */
+            name?: Record<string, never> | null;
+            /**
+             * @example USER
+             * @enum {string}
+             */
+            role: "USER" | "ADMIN";
+        };
+        LoginResponseDto: {
+            user: components["schemas"]["UserDto"];
+            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+            accessToken: string;
+        };
+        RefreshResponseDto: {
+            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+            accessToken: string;
         };
         CreateCategoryDto: {
             /** @example Coffee */
@@ -262,6 +322,42 @@ export interface components {
             attributes?: Record<string, never>;
             /** @example 1 */
             categoryId: number;
+        };
+        ProductDto: {
+            /** @example 1 */
+            id: number;
+            /** @example Guatemala Huehuetenango */
+            name: string;
+            /** @example Smooth and balanced coffee with notes of chocolate. */
+            description?: Record<string, never> | null;
+            /** @example 18000 */
+            price: number;
+            /** @example 100 */
+            stock: number;
+            /**
+             * @example [
+             *       "https://example.com/image1.jpg"
+             *     ]
+             */
+            images: unknown[][];
+            /**
+             * @example {
+             *       "roast": "Medium",
+             *       "origin": "Guatemala"
+             *     }
+             */
+            attributes: Record<string, never>;
+            /** @example 1 */
+            categoryId: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ProductsResponseDto: {
+            items: components["schemas"]["ProductDto"][];
+            /** @example 10 */
+            total: number;
         };
         UpdateProductDto: {
             /** @example Guatemala Huehuetenango */
@@ -349,7 +445,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SignupResponseDto"];
+                };
             };
             /** @description User already exists */
             409: {
@@ -378,10 +476,48 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
             };
             /** @description Invalid credentials */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -403,7 +539,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UserDto"];
+                };
             };
         };
     };
@@ -501,7 +639,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProductsResponseDto"];
+                };
             };
         };
     };
@@ -522,7 +662,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProductDto"];
+                };
             };
         };
     };
@@ -541,7 +683,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProductDto"];
+                };
             };
         };
     };
@@ -583,7 +727,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProductDto"];
+                };
             };
         };
     };
