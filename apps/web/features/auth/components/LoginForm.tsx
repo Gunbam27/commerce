@@ -1,9 +1,8 @@
 'use client'
 import { useState } from "react";
-import { useLogin } from "../api/useLogin";
+import { useLogin } from "@/features/auth/api/useLogin";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "../store/useAuthStore";
-import { getProfile } from "../api/useProfile";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function LoginForm(){
@@ -19,21 +18,15 @@ export default function LoginForm(){
         e.preventDefault();
         login({email,password},
           {
-            onSuccess:async (data)=>{
-              try{
-                const user = await getProfile(); 
-                queryClient.setQueryData(['profile'], user);
-                loginAction(user,data.accessToken);
-                router.push('/');
-              }catch(error){
-                alert(error);
-
-              }
-              
+            onSuccess: (data) => {
+              const user = data.user;
+              queryClient.setQueryData(['profile'], user);
+              loginAction(user, data.accessToken);
+              router.push('/');
             },
             onError:(error:any)=>{
               console.log(error);
-              alert(error.response.data.message);
+              alert("로그인에 실패했습니다.");
 
             }
           }

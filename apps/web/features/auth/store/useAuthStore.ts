@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { User } from "../type/user";
+import { User } from "@/features/auth/type/auth";
 import Cookies from "js-cookie";
-import apiClient from "../../../utils/apiClient";
+import apiClient from "@/utils/apiClient";
 
 interface AuthState {
     user:User | null;
