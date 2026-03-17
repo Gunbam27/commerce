@@ -5,6 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import type { Response } from 'express';
+import { LoginResponseDto, RefreshResponseDto, SignupResponseDto, UserDto } from './dto/auth-response.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,7 +14,7 @@ export class AuthController {
 
   @Post('signup')
   @ApiOperation({ summary: 'User Signup' })
-  @ApiResponse({ status: 201, description: 'User successfully registered' })
+  @ApiResponse({ status: 201, description: 'User successfully registered', type: SignupResponseDto })
   @ApiResponse({ status: 409, description: 'User already exists' })
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
@@ -22,7 +23,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'User Login' })
-  @ApiResponse({ status: 200, description: 'Login successful, returns JWT' })
+  @ApiResponse({ status: 200, description: 'Login successful, returns JWT', type: LoginResponseDto })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(
     @Body() loginDto: LoginDto,
@@ -42,6 +43,7 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: 200, type: RefreshResponseDto })
   async refresh(
     @Request() req,
     @Res({ passthrough: true }) response: Response,
@@ -66,7 +68,7 @@ export class AuthController {
   @Get('profile')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get User Profile' })
-  @ApiResponse({ status: 200, description: 'Returns current user data' })
+  @ApiResponse({ status: 200, description: 'Returns current user data', type: UserDto })
   getProfile(@Request() req) {
     return req.user;
   }
