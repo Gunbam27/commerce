@@ -8,9 +8,9 @@ export class CartService {
   constructor(private prisma: PrismaService) {}
 
   async addToCart(userId: number, addToCartDto: AddToCartDto) {
-    const { productId, quantity } = addToCartDto;
+    const { productId, quantity, size = '', color = '' } = addToCartDto;
 
-    // Check if product exists and has stock
+    // Check if product exists
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
     });
@@ -19,12 +19,14 @@ export class CartService {
       throw new NotFoundException('Product not found');
     }
 
-    // Upsert cart item
+    // Upsert cart item with variant info
     return this.prisma.cartItem.upsert({
       where: {
-        userId_productId: {
+        userId_productId_size_color: {
           userId,
           productId,
+          size,
+          color,
         },
       },
       update: {
@@ -36,6 +38,8 @@ export class CartService {
         userId,
         productId,
         quantity,
+        size,
+        color,
       },
     });
   }
@@ -57,25 +61,30 @@ export class CartService {
   }
 
   async updateQuantity(userId: number, productId: number, updateCartItemDto: UpdateCartItemDto) {
+    const { quantity, size = '', color = '' } = updateCartItemDto;
     return this.prisma.cartItem.update({
       where: {
-        userId_productId: {
+        userId_productId_size_color: {
           userId,
           productId,
+          size,
+          color,
         },
       },
       data: {
-        quantity: updateCartItemDto.quantity,
+        quantity,
       },
     });
   }
 
-  async removeItem(userId: number, productId: number) {
+  async removeItem(userId: number, productId: number, size: string = '', color: string = '') {
     return this.prisma.cartItem.delete({
       where: {
-        userId_productId: {
+        userId_productId_size_color: {
           userId,
           productId,
+          size,
+          color,
         },
       },
     });

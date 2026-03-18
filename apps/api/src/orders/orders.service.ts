@@ -37,6 +37,8 @@ export class OrdersService {
           productId: item.productId,
           quantity: item.quantity,
           price: price,
+          size: item.size,
+          color: item.color,
         });
 
         // Decrement stock
