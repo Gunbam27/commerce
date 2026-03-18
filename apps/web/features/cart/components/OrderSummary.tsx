@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { Tag, ArrowRight } from 'lucide-react';
 

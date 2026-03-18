@@ -1,27 +1,57 @@
+'use client';
+
+import React, { useState } from "react";
 import Image from "next/image";
-import StarRate from "../../../components/common/StarRate";
-import { Product } from "../../../features/products/types/product";
+import { useParams } from "next/navigation";
+import StarRate from "@/components/common/StarRate";
+import { Product } from "@/features/products/types/product";
+import { useCartManage } from "@/features/cart/hooks/useCartManage";
 
-export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default function ProductDetailPage() {
+    const params = useParams();
+    const id = params?.id;
+    const { addItem } = useCartManage();
 
-    const product: Product & { 
-        rating: number, 
-        description: string, 
-        images: string[], 
-        colors: string[], 
-        sizes: string[] 
-    } = {
+    const [selectedColor, setSelectedColor] = useState<string>("");
+    const [selectedSize, setSelectedSize] = useState<string>("");
+    const [quantity, setQuantity] = useState<number>(1);
+
+    // Mock product data (Actual implementation should use useProduct query)
+    const product: any = {
         id: Number(id),
         name: "One Life Graphic T-shirt",
         price: 260,
         rating: 4.5,
         description: "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
         images: ["/assets/clothes.png", "/assets/clothes.png", "/assets/clothes.png"],
-        colors: ["#4F4631", "#314F4A", "#31344F"],
+        colors: [
+            { id: 1, name: "Brown", hex: "#4F4631" },
+            { id: 2, name: "Green", hex: "#314F4A" },
+            { id: 3, name: "Navy", hex: "#31344F" }
+        ],
         sizes: ["Small", "Medium", "Large", "X-Large"],
         stock: 100,
         categoryId: 1
+    };
+
+    const handleAddToCart = () => {
+        if (!selectedColor || !selectedSize) {
+            alert("Please select a color and size first.");
+            return;
+        }
+
+        addItem({
+            id: 0, // Server will ignore or local store will generate
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            size: selectedSize,
+            color: selectedColor,
+            image: product.images[0]
+        });
+
+        alert("Added to cart!");
     };
 
     return (
@@ -41,7 +71,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         ))}
                     </div>
                     <div className="flex-1 bg-[#F0EEED] rounded-2xl overflow-hidden aspect-square">
-                        <Image src={product.images[0] as string} alt={product.name} width={600} height={600} className="w-full h-full object-contain" />
+                        <Image src={product.images[0]} alt={product.name} width={600} height={600} className="w-full h-full object-contain" />
                     </div>
                 </div>
 
@@ -64,8 +94,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     <div className="mb-8 pb-8 border-b border-gray-100">
                         <p className="text-gray-500 mb-4">Select Colors</p>
                         <div className="flex gap-4">
-                            {product.colors.map((color: string, index: number) => (
-                                <button key={index} className="w-10 h-10 rounded-full border border-gray-200" style={{ backgroundColor: color }} />
+                            {product.colors.map((color: any) => (
+                                <button 
+                                    key={color.id} 
+                                    onClick={() => setSelectedColor(color.name)}
+                                    className={`w-10 h-10 rounded-full border-2 transition-all ${
+                                        selectedColor === color.name ? 'border-black' : 'border-transparent'
+                                    }`}
+                                    style={{ backgroundColor: color.hex }}
+                                    title={color.name}
+                                />
                             ))}
                         </div>
                     </div>
@@ -75,7 +113,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         <p className="text-gray-500 mb-4">Choose Size</p>
                         <div className="flex flex-wrap gap-3">
                             {product.sizes.map((size: string) => (
-                                <button key={size} className="px-6 py-3 rounded-full bg-[#F0EEED] text-gray-600 hover:bg-black hover:text-white transition-colors">
+                                <button 
+                                    key={size} 
+                                    onClick={() => setSelectedSize(size)}
+                                    className={`px-6 py-3 rounded-full transition-colors ${
+                                        selectedSize === size ? 'bg-black text-white' : 'bg-[#F0EEED] text-gray-600'
+                                    }`}
+                                >
                                     {size}
                                 </button>
                             ))}
@@ -85,11 +129,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     {/* Add to cart */}
                     <div className="flex gap-5">
                         <div className="flex items-center bg-[#F0EEED] rounded-full px-5 py-3 gap-8">
-                            <button className="text-2xl">-</button>
-                            <span className="font-bold">1</span>
-                            <button className="text-2xl">+</button>
+                            <button onClick={() => setQuantity(prev => Math.max(1, prev - 1))} className="text-2xl">-</button>
+                            <span className="font-bold">{quantity}</span>
+                            <button onClick={() => setQuantity(prev => prev + 1)} className="text-2xl">+</button>
                         </div>
-                        <button className="flex-1 bg-black text-white rounded-full py-4 px-8 font-medium hover:bg-gray-800 transition-colors">
+                        <button 
+                            onClick={handleAddToCart}
+                            className="flex-1 bg-black text-white rounded-full py-4 px-8 font-medium hover:bg-gray-800 transition-colors"
+                        >
                             Add to Cart
                         </button>
                     </div>

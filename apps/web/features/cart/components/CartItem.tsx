@@ -1,9 +1,13 @@
+'use client'
+
 import React from 'react';
 import Image from 'next/image';
 import { Trash2, Plus, Minus } from 'lucide-react';
+import { useCartManage } from '../hooks/useCartManage';
 
 interface CartItemProps {
     id: number;
+    productId: number;
     name: string;
     size: string;
     color: string;
@@ -12,7 +16,21 @@ interface CartItemProps {
     quantity: number;
 }
 
-export default function CartItem({ name, size, color, price, image, quantity }: CartItemProps) {
+export default function CartItem({ productId, name, size, color, price, image, quantity }: CartItemProps) {
+    const { updateQuantity, removeItem } = useCartManage();
+
+    const handleQuantityChange = (newQuantity: number) => {
+        if (newQuantity <= 0) {
+            removeItem(productId, size, color);
+        } else {
+            updateQuantity(productId, newQuantity, size, color);
+        }
+    };
+
+    const handleRemove = () => {
+        removeItem(productId, size, color);
+    }
+
     return (
         <div className="flex gap-4 py-6 first:pt-0 last:pb-0 border-b border-gray-100 last:border-0">
             <div className="w-24 h-24 md:w-32 md:h-32 bg-[#F0EEED] rounded-xl overflow-hidden flex-shrink-0">
@@ -26,7 +44,7 @@ export default function CartItem({ name, size, color, price, image, quantity }: 
                         <p className="text-sm text-gray-600">Size: <span className="text-gray-400">{size}</span></p>
                         <p className="text-sm text-gray-600">Color: <span className="text-gray-400">{color}</span></p>
                     </div>
-                    <button className="text-red-500 hover:text-red-600 transition-colors">
+                    <button onClick={handleRemove} className="text-red-500 hover:text-red-600 transition-colors">
                         <Trash2 size={24} />
                     </button>
                 </div>
@@ -34,11 +52,11 @@ export default function CartItem({ name, size, color, price, image, quantity }: 
                 <div className="flex justify-between items-end">
                     <span className="font-bold text-xl md:text-2xl">${price}</span>
                     <div className="flex items-center bg-[#F0EEED] rounded-full px-4 py-2 gap-5">
-                        <button className="hover:text-gray-500 transition-colors">
+                        <button onClick={() => handleQuantityChange(quantity - 1)} className="hover:text-gray-500 transition-colors">
                             <Minus size={18} />
                         </button>
                         <span className="font-medium">{quantity}</span>
-                        <button className="hover:text-gray-500 transition-colors">
+                        <button onClick={() => handleQuantityChange(quantity + 1)} className="hover:text-gray-500 transition-colors">
                             <Plus size={18} />
                         </button>
                     </div>
