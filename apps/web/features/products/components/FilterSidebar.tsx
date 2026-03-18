@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ChevronRight, SlidersHorizontal, ChevronUp, X } from 'lucide-react';
 
 interface FilterSidebarProps {
@@ -15,13 +15,37 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
     const sizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
     const dressStyles = ['Casual', 'Formal', 'Party', 'Gym'];
 
+    // 바디 스크롤 방지
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
     const sidebarClasses = `
-        fixed inset-0 z-[100] bg-white p-6 overflow-y-auto transition-transform duration-300 lg:static lg:z-0 lg:translate-y-0 lg:flex lg:flex-col lg:max-w-[295px] lg:shrink-0 lg:border lg:border-gray-100 lg:rounded-[20px] lg:h-fit lg:sticky lg:top-24
+        fixed inset-y-0 bottom-0 left-0 w-full max-h-[85vh] mt-auto z-[100] bg-white p-6 rounded-t-2xl overflow-y-auto transition-transform duration-300 transform
+        lg:static lg:z-0 lg:translate-transform-none lg:flex lg:flex-col lg:max-w-[295px] lg:shrink-0 lg:border lg:border-gray-100 lg:rounded-[20px] lg:h-fit lg:max-h-none lg:sticky lg:top-24
         ${isOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
     `;
 
     return (
-        <aside className={sidebarClasses}>
+        <>
+            {/* Dimmed Backdrop */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/40 z-[90] lg:hidden transition-opacity"
+                    onClick={onClose}
+                    aria-hidden="true"
+                />
+            )}
+            
+            <aside className={sidebarClasses}>
             <div className="flex justify-between items-center mb-6 pb-6 border-b border-gray-100">
                 <h2 className="font-bold text-xl">Filters</h2>
                 <button onClick={onClose} className="lg:hidden">
@@ -105,5 +129,6 @@ export default function FilterSidebar({ isOpen, onClose }: FilterSidebarProps) {
                 Apply Filter
             </button>
         </aside>
+        </>
     );
 }

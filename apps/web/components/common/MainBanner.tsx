@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function MainBanner() {
     return (
@@ -17,9 +18,9 @@ export default function MainBanner() {
                 <p className="pt-6 lg:pt-8 text-sm lg:text-base text-gray-600 max-w-[500px]">
                     Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
                 </p>
-                <button className="mt-8 w-full lg:w-[210px] bg-black text-white px-8 py-4 rounded-full font-medium active:scale-95 transition-transform">
+                <Link href="/shop" className="mt-8 w-full lg:w-[210px] bg-black text-white px-8 py-4 rounded-full font-medium active:scale-95 transition-transform flex items-center justify-center">
                     Shop Now
-                </button>
+                </Link>
                 
                 <div className="flex flex-row mt-10 lg:mt-12 justify-between lg:justify-start items-center lg:items-start gap-x-2 lg:gap-0">
                     <div className="flex flex-col items-start lg:pr-8 lg:border-r border-[#DAD8D9]">
