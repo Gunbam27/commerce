@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useAuthStore } from "../features/auth/store/useAuthStore";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:9090",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:9090",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
