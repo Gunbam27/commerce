@@ -23,7 +23,7 @@ export default function ProductList() {
 
                 {/* Todo: 서버에 rating넣기*/}
                 {products.map((product) => (
-                    <ProductCard key={product.id} id={product.id} name={product.name} price={product.price} image={product.images?.[0] || ''} rating={4.5} />
+                    <ProductCard key={product.id} id={product.id} name={product.name} price={product.price} image={(product.images as any)?.[0] || ''} rating={4.5} />
                 ))}
             </div>
 

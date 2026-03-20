@@ -16,7 +16,7 @@ export class ProductDto {
   @ApiProperty({ example: 100 })
   stock: number;
 
-  @ApiProperty({ example: ['https://example.com/image1.jpg'], isArray: true })
+  @ApiProperty({ example: ['https://example.com/image1.jpg'], type: [String] })
   images: string[];
 
   @ApiProperty({ example: { roast: 'Medium', origin: 'Guatemala' } })
