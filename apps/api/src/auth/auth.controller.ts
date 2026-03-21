@@ -31,10 +31,13 @@ export class AuthController {
   ) {
     const { user, accessToken, refreshToken } = await this.authService.login(loginDto);
 
+    const isProduction = process.env.FRONTEND_URL?.includes('portstyle.shop');
+
     response.cookie('refresh_token', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'lax',
+      domain: isProduction ? '.portstyle.shop' : undefined,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
 
