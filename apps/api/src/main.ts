@@ -19,6 +19,8 @@ async function bootstrap() {
   }));
 
   // CORS Enable
+  console.log("🔥 ENV FRONTEND_URL:", process.env.FRONTEND_URL);
+  console.log("🔥 CORS ORIGIN:", "https://portstyle.shop");
 
   app.enableCors({
     origin: "https://portstyle.shop",
