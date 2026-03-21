@@ -19,18 +19,9 @@ async function bootstrap() {
   }));
 
   // CORS Enable
-  const frontendUrl = process.env.FRONTEND_URL;
-  const origins = [
-    'http://localhost:3000',
-    'https://portstyle.shop',
-    'https://www.portstyle.shop',
-  ];
-  if (frontendUrl && !origins.includes(frontendUrl)) {
-    origins.push(frontendUrl);
-  }
 
   app.enableCors({
-    origin: origins,
+    origin: "https://portstyle.shop",
     credentials: true,
   });
 
