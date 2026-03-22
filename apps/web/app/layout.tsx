@@ -42,6 +42,7 @@ export const metadata: Metadata = {
 };
 
 import QueryProvider from "../providers/QueryProvider";
+import GlobalModal from "../components/common/GlobalModal";
 
 export default function RootLayout({
   children,
@@ -56,6 +57,7 @@ export default function RootLayout({
           <NavBar />
           {children}
           <Footer />
+          <GlobalModal />
         </QueryProvider>
       </body>
     </html>

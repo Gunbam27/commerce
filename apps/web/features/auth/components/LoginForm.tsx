@@ -4,6 +4,7 @@ import { useLogin } from "@/features/auth/api/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { useModalStore } from "@/store/useModalStore";
 
 export default function LoginForm(){
     const router = useRouter();
@@ -26,8 +27,11 @@ export default function LoginForm(){
             },
             onError:(error:any)=>{
               console.log(error);
-              alert("로그인에 실패했습니다.");
-
+              useModalStore.getState().openModal({
+                title: "로그인 실패",
+                message: "이메일 또는 비밀번호를 확인해주세요.",
+                type: "error"
+              });
             }
           }
         );
@@ -71,11 +75,14 @@ return (
       {isPending ? "로그인 중..." : "로그인"}
     </button>
 
-    {isError && (
-      <p className="text-sm text-red-500">
-        로그인에 실패했습니다.
+    <div className="text-center">
+      <p className="text-sm text-neutral-600">
+        아이디가 없나요?{" "}
+        <a href="/signup" className="underline font-medium hover:text-black transition-colors">
+          회원가입하러가기
+        </a>
       </p>
-    )}
+    </div>
   </form>
 )
 }

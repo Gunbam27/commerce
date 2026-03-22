@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSignup } from "@/features/auth/api/useSignUp";
+import { useModalStore } from "@/store/useModalStore";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -11,43 +12,62 @@ export default function SignupForm() {
   const [password, setPassword] = useState("");
 
   const { mutate: signUp, isPending } = useSignup();
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const { openModal } = useModalStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg(null);
 
     // 1. 이름 검사 (2자 이상)
     if (name.trim().length < 2) {
-      setErrorMsg("이름은 최소 2자 이상 입력해주세요.");
+      openModal({
+        title: "입력 오류",
+        message: "이름은 최소 2자 이상 입력해주세요.",
+        type: "warning"
+      });
       return;
     }
 
     // 2. 이메일 형식 검사 (Regex)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setErrorMsg("올바른 이메일 형식이 아닙니다.");
+      openModal({
+        title: "입력 오류",
+        message: "올바른 이메일 형식이 아닙니다.",
+        type: "warning"
+      });
       return;
     }
 
     // 3. 비밀번호 검사 (6자 이상 + 영문/숫자 필수)
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/;
     if (!passwordRegex.test(password)) {
-      setErrorMsg("비밀번호는 영문과 숫자를 포함하여 6자 이상이어야 합니다.");
+      openModal({
+        title: "입력 오류",
+        message: "비밀번호는 영문과 숫자를 포함하여 6자 이상이어야 합니다.",
+        type: "warning"
+      });
       return;
     }
 
     signUp({ name, email, password }, {
       onSuccess: () => {
-        setShowModal(true);
+        openModal({
+          title: "회원가입 완료!",
+          message: "반갑습니다! 로그인 페이지로 이동합니다.",
+          type: "success",
+          onConfirm: () => router.push('/login')
+        });
       },
       onError: (error: any) => {
-        if (error.response?.status === 409) {
-          setErrorMsg("이미 존재하는 이메일입니다.");
-        } else {
-          setErrorMsg("회원가입에 실패했습니다.");
-        }
+        const message = error.response?.status === 409 
+          ? "이미 존재하는 이메일입니다." 
+          : "회원가입에 실패했습니다.";
+        
+        openModal({
+          title: "회원가입 실패",
+          message,
+          type: "error"
+        });
       }
     });
   }
@@ -99,6 +119,9 @@ export default function SignupForm() {
             required
             className="h-10 rounded-md border border-neutral-300 px-3 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black transition"
           />
+          <p className="text-[11px] text-neutral-500 px-1">
+            * 영문과 숫자를 포함하여 6자 이상이어야 합니다.
+          </p>
         </div>
 
         <button
@@ -108,38 +131,7 @@ export default function SignupForm() {
         >
           {isPending ? "가입 중..." : "회원가입"}
         </button>
-
-        {errorMsg && (
-          <p className="text-sm text-red-500">{errorMsg}</p>
-        )}
       </form>
-
-      {/* 성공 모달 */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
-            <div className="flex flex-col items-center text-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div className="flex flex-col gap-1">
-                <h2 className="text-lg font-bold">회원가입 완료!</h2>
-                <p className="text-sm text-neutral-500">
-                  반갑습니다! 로그인 페이지로 이동합니다.
-                </p>
-              </div>
-              <button
-                onClick={() => router.push('/login')}
-                className="w-full h-11 rounded-xl bg-black text-white text-sm font-semibold transition hover:bg-neutral-800 active:scale-95"
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

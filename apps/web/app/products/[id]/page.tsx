@@ -6,11 +6,13 @@ import { useParams } from "next/navigation";
 import StarRate from "@/components/common/StarRate";
 import { Product } from "@/features/products/types/product";
 import { useCartManage } from "@/features/cart/hooks/useCartManage";
+import { useModalStore } from "@/store/useModalStore";
 
 export default function ProductDetailPage() {
     const params = useParams();
     const id = params?.id;
     const { addItem } = useCartManage();
+    const { openModal } = useModalStore();
 
     const [selectedColor, setSelectedColor] = useState<string>("");
     const [selectedSize, setSelectedSize] = useState<string>("");
@@ -36,7 +38,11 @@ export default function ProductDetailPage() {
 
     const handleAddToCart = () => {
         if (!selectedColor || !selectedSize) {
-            alert("Please select a color and size first.");
+            openModal({
+                title: "선택 필요",
+                message: "색상과 사이즈를 먼저 선택해주세요.",
+                type: "warning"
+            });
             return;
         }
 
@@ -51,7 +57,11 @@ export default function ProductDetailPage() {
             image: product.images[0]
         });
 
-        alert("Added to cart!");
+        openModal({
+            title: "장바구니 담기 완료",
+            message: "상품이 장바구니에 정상적으로 담겼습니다.",
+            type: "success"
+        });
     };
 
     return (

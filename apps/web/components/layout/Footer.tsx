@@ -7,7 +7,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     {/* Brand Section */}
                     <div className="lg:col-span-4 flex flex-col items-start">
-                        <h2 className="text-3xl font-bold font-integral text-black mb-6">SHOP.CO</h2>
+                        <h2 className="text-3xl font-bold font-integral text-black mb-6">PORTSTYLE</h2>
                         <p className="text-sm text-gray-600 mb-9 leading-relaxed max-w-[248px]">
                             We have clothes that suits your style and which you're proud to wear. From women to men.
                         </p>
@@ -70,7 +70,7 @@ export default function Footer() {
 
                 {/* Bottom Section */}
                 <div className="border-t border-black/10 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-sm text-gray-600">Shop.co © 2000-2023, All Rights Reserved</p>
+                    <p className="text-sm text-gray-600">PortStyle © 2000-2023, All Rights Reserved</p>
                     <div className="flex gap-3 h-[30px] items-center">
                         <div className="w-[46px] h-[30px] bg-white rounded-md border border-gray-200 flex items-center justify-center p-1">
                             <span className="text-[10px] font-bold text-blue-800 italic">VISA</span>
