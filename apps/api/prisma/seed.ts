@@ -10,107 +10,124 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter } as any);
 
+const BASE_IMAGE_URL = 'https://vhehjdaiqudprtxhmgvt.supabase.co/storage/v1/object/public/product-image/';
+
 async function main() {
-  // 기존 데이터 삭제 (선택 사항)
+  console.log('Cleaning up existing data...');
   await prisma.cartItem.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
-  // 카테고리 생성
-  const categories = await Promise.all([
-    prisma.category.create({ data: { name: 'T-Shirts' } }),
-    prisma.category.create({ data: { name: 'Shorts' } }),
-    prisma.category.create({ data: { name: 'Shirts' } }),
-    prisma.category.create({ data: { name: 'Hoodies' } }),
-    prisma.category.create({ data: { name: 'Jeans' } }),
-  ]);
+  console.log('Creating categories...');
+  const categoriesMap: Record<string, any> = {};
+  const categoryNames = ['Hoodies', 'Jeans', 'Shirts', 'Shorts', 'T-Shirts'];
+  
+  for (const name of categoryNames) {
+    categoriesMap[name] = await prisma.category.create({ data: { name } });
+  }
 
-  const tshirtsId = categories[0].id;
-  const shortsId = categories[1].id;
-  const shirtsId = categories[2].id;
-  const jeansId = categories[4].id;
-
-  // 상품 데이터 생성
   const products = [
     {
-      name: "Gradient Graphic T-shirt",
-      price: 145,
-      stock: 100,
-      images: ["/assets/clothes.png"],
-      categoryId: tshirtsId,
-      description: "A stylish gradient graphic t-shirt made from 100% cotton."
-    },
-    {
-      name: "Polo with Tipping Details",
-      price: 180,
+      name: 'Classic Black Hoodie',
+      price: 85.0,
       stock: 50,
-      images: ["/assets/clothes.png"],
-      categoryId: tshirtsId,
-      description: "Classic polo shirt with elegant tipping details on the collar and sleeves."
+      images: [`${BASE_IMAGE_URL}hood001_black.png`, `${BASE_IMAGE_URL}hood001_skyblue.png`],
+      colors: ['Black', 'Skyblue'],
+      categoryId: categoriesMap['Hoodies'].id,
+      description: 'A cozy and stylish hoodie available in multiple colors.'
     },
     {
-      name: "Black Striped T-shirt",
-      price: 120,
-      stock: 75,
-      images: ["/assets/clothes.png"],
-      categoryId: tshirtsId,
-      description: "Comfortable black t-shirt with subtle stripes."
-    },
-    {
-      name: "Skinny Fit Jeans",
-      price: 240,
+      name: 'Premium Pink Hoodie',
+      price: 89.0,
       stock: 30,
-      images: ["/assets/clothes.png"],
-      categoryId: jeansId,
-      description: "Modern skinny fit jeans with a touch of stretch for comfort."
+      images: [`${BASE_IMAGE_URL}hood002_pink.png`],
+      colors: ['Pink'],
+      categoryId: categoriesMap['Hoodies'].id,
+      description: 'A premium soft hoodie with a vibrant pink color.'
     },
     {
-      name: "Checkered Shirt",
-      price: 180,
+      name: 'Slim Fit Blue Jeans',
+      price: 120.0,
       stock: 45,
-      images: ["/assets/clothes.png"],
-      categoryId: shirtsId,
-      description: "Classic checkered shirt suitable for both casual and semi-formal occasions."
+      images: [`${BASE_IMAGE_URL}jean001_blue.png`],
+      colors: ['Blue'],
+      categoryId: categoriesMap['Jeans'].id,
+      description: 'Modern slim-fit jeans made with durable denim.'
     },
     {
-      name: "Sleeve Striped T-shirt",
-      price: 130,
+      name: 'Classic Black Jeans',
+      price: 115.0,
+      stock: 40,
+      images: [`${BASE_IMAGE_URL}jean002_black.png`],
+      colors: ['Black'],
+      categoryId: categoriesMap['Jeans'].id,
+      description: 'Essential black jeans for every wardrobe.'
+    },
+    {
+      name: 'Casual Cotton Shirt',
+      price: 65.0,
       stock: 60,
-      images: ["/assets/clothes.png"],
-      categoryId: tshirtsId,
-      description: "Short sleeve t-shirt featuring bold stripes on the sleeves."
+      images: [`${BASE_IMAGE_URL}shirt001_pink.png`, `${BASE_IMAGE_URL}shirt001_yellow.png`],
+      colors: ['Pink', 'Yellow'],
+      categoryId: categoriesMap['Shirts'].id,
+      description: 'Breathable cotton shirt perfect for casual outings.'
     },
     {
-      name: "Vertical Striped Shirt",
-      price: 212,
-      stock: 25,
-      images: ["/assets/clothes.png"],
-      categoryId: shirtsId,
-      description: "Stylish vertical striped shirt that offers a slim and tall appearance."
+      name: 'Smart Look Shirt',
+      price: 75.0,
+      stock: 35,
+      images: [`${BASE_IMAGE_URL}shirt002_navy.png`, `${BASE_IMAGE_URL}shirt002_skyblue.png`],
+      colors: ['Navy', 'Skyblue'],
+      categoryId: categoriesMap['Shirts'].id,
+      description: 'A sharp, smart-looking shirt for professional and social events.'
     },
     {
-      name: "Courage Graphic T-shirt",
-      price: 145,
+      name: 'Summer Cargo Shorts',
+      price: 45.0,
       stock: 80,
-      images: ["/assets/clothes.png"],
-      categoryId: tshirtsId,
-      description: "Graphic t-shirt with a bold 'Courage' print."
+      images: [`${BASE_IMAGE_URL}shorts001_black.png`, `${BASE_IMAGE_URL}shorts001_blue.png`],
+      colors: ['Black', 'Blue'],
+      categoryId: categoriesMap['Shorts'].id,
+      description: 'Durable and practical cargo shorts for summer adventures.'
     },
     {
-      name: "Loose Fit Bermuda Shorts",
-      price: 80,
-      stock: 55,
-      images: ["/assets/clothes.png"],
-      categoryId: shortsId,
-      description: "Comfortable loose-fit Bermuda shorts perfect for summer days."
+      name: 'Classic White Shorts',
+      price: 42.0,
+      stock: 25,
+      images: [`${BASE_IMAGE_URL}shorts002_white.png`],
+      colors: ['White'],
+      categoryId: categoriesMap['Shorts'].id,
+      description: 'Clean and simple white shorts for a fresh summer look.'
+    },
+    {
+      name: 'Essential White T-Shirt',
+      price: 25.0,
+      stock: 120,
+      images: [`${BASE_IMAGE_URL}tshirt001_white.png`],
+      colors: ['White'],
+      categoryId: categoriesMap['T-Shirts'].id,
+      description: 'The foundation of any outfit, a high-quality white t-shirt.'
+    },
+    {
+      name: 'Essential Black T-Shirt',
+      price: 25.0,
+      stock: 110,
+      images: [`${BASE_IMAGE_URL}tshirt002_black.png`],
+      colors: ['Black'],
+      categoryId: categoriesMap['T-Shirts'].id,
+      description: 'Versatile black t-shirt made from premium soft cotton.'
     }
   ];
 
+  console.log('Inserting products...');
   for (const product of products) {
     await prisma.product.create({
-      data: product
+      data: {
+        ...product,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL']
+      }
     });
   }
 

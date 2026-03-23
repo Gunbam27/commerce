@@ -30,6 +30,18 @@ export class CreateProductDto {
   @IsString({ each: true })
   images?: string[];
 
+  @ApiProperty({ example: ['Black', 'Skyblue'], required: false })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  colors?: string[];
+
+  @ApiProperty({ example: ['S', 'M', 'L'], required: false })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  sizes?: string[];
+
   @ApiProperty({ example: { roast: 'Medium', origin: 'Guatemala' }, required: false })
   @IsOptional()
   attributes?: any;

@@ -33,6 +33,8 @@ model Product {
   price       Decimal     @db.Decimal(10, 2)
   stock       Int         @default(0)
   images      String[]
+  colors      String[]    @default([])
+  sizes       String[]    @default(["S", "M", "L", "XL", "XXL"])
   attributes  Json        @default("{}")
   category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int

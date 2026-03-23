@@ -22,10 +22,14 @@ export class ProductsService {
   async findAll(query?: {
     categoryId?: number;
     search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    colors?: string[];
+    sizes?: string[];
     skip?: number;
     take?: number;
   }) {
-    const { categoryId, search, skip = 0, take = 10 } = query || {};
+    const { categoryId, search, minPrice, maxPrice, colors, sizes, skip = 0, take = 10 } = query || {};
     
     const where: any = {};
     if (categoryId) where.categoryId = categoryId;
@@ -34,6 +38,23 @@ export class ProductsService {
         { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
       ];
+    }
+
+    // Price Filter
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.price = {};
+      if (minPrice !== undefined) where.price.gte = minPrice;
+      if (maxPrice !== undefined) where.price.lte = maxPrice;
+    }
+
+    // Colors Filter (hasSome for array)
+    if (colors && colors.length > 0) {
+      where.colors = { hasSome: colors };
+    }
+
+    // Sizes Filter (hasSome for array)
+    if (sizes && sizes.length > 0) {
+      where.sizes = { hasSome: sizes };
     }
 
     const [items, total] = await Promise.all([
@@ -48,6 +69,24 @@ export class ProductsService {
     ]);
 
     return { items, total };
+  }
+
+  async getMetadata() {
+    const [categories, products] = await Promise.all([
+      this.prisma.category.findMany(),
+      this.prisma.product.findMany({ 
+        select: { colors: true, sizes: true } 
+      }),
+    ]);
+
+    const colors = Array.from(new Set(products.flatMap(p => p.colors)));
+    const sizes = Array.from(new Set(products.flatMap(p => p.sizes)));
+
+    return {
+      categories,
+      colors,
+      sizes
+    };
   }
 
   async findOne(id: number) {

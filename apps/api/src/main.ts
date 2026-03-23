@@ -23,7 +23,7 @@ async function bootstrap() {
   console.log("🔥 CORS ORIGIN:", "https://portstyle.shop");
 
   app.enableCors({
-    origin: "https://portstyle.shop",
+    origin: ["https://portstyle.shop", "http://localhost:3000"],
     credentials: true,
   });
 

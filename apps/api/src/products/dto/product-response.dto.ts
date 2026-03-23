@@ -19,6 +19,12 @@ export class ProductDto {
   @ApiProperty({ example: ['https://example.com/image1.jpg'], type: [String] })
   images: string[];
 
+  @ApiProperty({ example: ['Black', 'Skyblue'], type: [String] })
+  colors: string[];
+
+  @ApiProperty({ example: ['S', 'M', 'L'], type: [String] })
+  sizes: string[];
+
   @ApiProperty({ example: { roast: 'Medium', origin: 'Guatemala' } })
   attributes: any;
 

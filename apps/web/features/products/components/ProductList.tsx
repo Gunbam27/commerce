@@ -1,18 +1,29 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import { ChevronDown, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useProducts } from '../api/useProducts';
+import { useProducts, ProductFilters } from '../api/useProducts';
+import NoResults from './NoResults';
 
-export default function ProductList() {
-    const {data,isLoading,isError} = useProducts();
+interface ProductListProps {
+    filters?: ProductFilters;
+    onResetFilters?: () => void;
+}
 
-    if(isLoading){
-        return <div>Loading...</div>
+export default function ProductList({ filters, onResetFilters }: ProductListProps) {
+    const { data, isLoading, isError } = useProducts(filters);
+
+    if (isLoading) {
+        return <div className="flex-1 py-40 text-center animate-pulse text-gray-400 font-medium text-lg italic">Searching for products...</div>
     }
-    if(isError){
-        return <div>Error</div>
+    if (isError) {
+        return <div className="flex-1 py-40 text-center text-red-500 font-bold">Something went wrong. Please try again later.</div>
     }
+
     const products = data?.items || []; 
+    
+    if (products.length === 0) {
+        return <NoResults onReset={onResetFilters} />
+    }
     const totalItems = data?.total || 0;
     const totalPages = Math.ceil(totalItems / 12);
     const currentPage = 1;

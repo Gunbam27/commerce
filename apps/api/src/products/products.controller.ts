@@ -17,22 +17,40 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
+  @Get('metadata')
+  @ApiOperation({ summary: 'Get metadata for filters (categories, colors, sizes)' })
+  getMetadata() {
+    return this.productsService.getMetadata();
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all products with filters' })
   @ApiQuery({ name: 'categoryId', required: false, type: Number })
   @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
+  @ApiQuery({ name: 'colors', required: false, type: [String] })
+  @ApiQuery({ name: 'sizes', required: false, type: [String] })
   @ApiQuery({ name: 'skip', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiResponse({ status: 200, type: ProductsResponseDto })
   findAll(
     @Query('categoryId') categoryId?: string,
     @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+    @Query('colors') colors?: string | string[],
+    @Query('sizes') sizes?: string | string[],
     @Query('skip') skip?: string,
     @Query('take') take?: string,
   ) {
     return this.productsService.findAll({
       categoryId: categoryId ? Number(categoryId) : undefined,
       search,
+      minPrice: minPrice ? Number(minPrice) : undefined,
+      maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      colors: typeof colors === 'string' ? colors.split(',') : colors,
+      sizes: typeof sizes === 'string' ? sizes.split(',') : sizes,
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
     });

@@ -2,17 +2,31 @@
 
 import React, { useEffect, useState } from "react";
 import Logo from "../common/Logo";
-import { ChevronDown, CircleUserRound, Search, ShoppingCart, Menu } from "lucide-react";
+import { ChevronDown, CircleUserRound, Search, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCartManage } from "@/features/cart/hooks/useCartManage";
 
 export default function NavBar() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const { items } = useCartManage();
+    
     const [mounted, setMounted] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+            setIsMobileSearchOpen(false);
+        }
+    };
 
     const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -36,19 +50,24 @@ export default function NavBar() {
                 </ul>
 
                 {/* Desktop Search Bar */}
-                <div className="hidden lg:flex flex-1 items-center gap-2 relative max-w-[577px]">
-                    <Search className="absolute left-4 text-gray-500" size={20} />
+                <form onSubmit={handleSearch} className="hidden lg:flex flex-1 items-center gap-2 relative max-w-[577px]">
+                    <Search className="absolute left-4 text-gray-400" size={20} />
                     <input
                         type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search for products..."
-                        className="w-full h-12 bg-gray-100 rounded-full px-5 pl-12 text-black focus:outline-none focus:ring-1 focus:ring-black/10"
+                        className="w-full h-12 bg-[#F0F0F0] rounded-full px-5 pl-12 text-black focus:outline-none focus:ring-1 focus:ring-black/10 transition-all placeholder:text-gray-400"
                     />
-                </div>
+                </form>
 
                 {/* Icons */}
                 <div className="flex items-center gap-3 md:gap-4">
                     {/* Mobile Search Icon */}
-                    <button className="lg:hidden p-1">
+                    <button 
+                        onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                        className="lg:hidden p-1"
+                    >
                         <Search size={22} />
                     </button>
                     <Link href="/cart" className="p-1 relative">
@@ -64,6 +83,30 @@ export default function NavBar() {
                     </a>
                 </div>
             </div>
+
+            {/* Mobile Search Bar (Expandable) */}
+            {isMobileSearchOpen && (
+                <div className="absolute top-[64px] left-0 w-full bg-white p-4 border-b border-gray-100 lg:hidden shadow-lg animate-in slide-in-from-top duration-200">
+                    <form onSubmit={handleSearch} className="relative flex items-center">
+                        <Search className="absolute left-4 text-gray-400" size={18} />
+                        <input
+                            type="text"
+                            autoFocus
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search for products..."
+                            className="w-full h-11 bg-[#F0F0F0] rounded-full px-5 pl-11 text-sm text-black focus:outline-none"
+                        />
+                        <button 
+                            type="button" 
+                            onClick={() => setIsMobileSearchOpen(false)}
+                            className="ml-3 p-1 text-gray-400 hover:text-black transition-colors"
+                        >
+                            <X size={22} />
+                        </button>
+                    </form>
+                </div>
+            )}
         </nav>
     );
 }

@@ -314,6 +314,21 @@ export interface components {
              */
             images?: string[];
             /**
+             * @example [
+             *       "Black",
+             *       "Skyblue"
+             *     ]
+             */
+            colors?: string[];
+            /**
+             * @example [
+             *       "S",
+             *       "M",
+             *       "L"
+             *     ]
+             */
+            sizes?: string[];
+            /**
              * @example {
              *       "roast": "Medium",
              *       "origin": "Guatemala"
@@ -339,7 +354,22 @@ export interface components {
              *       "https://example.com/image1.jpg"
              *     ]
              */
-            images: unknown[][];
+            images: string[];
+            /**
+             * @example [
+             *       "Black",
+             *       "Skyblue"
+             *     ]
+             */
+            colors: string[];
+            /**
+             * @example [
+             *       "S",
+             *       "M",
+             *       "L"
+             *     ]
+             */
+            sizes: string[];
             /**
              * @example {
              *       "roast": "Medium",
@@ -375,6 +405,21 @@ export interface components {
              */
             images?: string[];
             /**
+             * @example [
+             *       "Black",
+             *       "Skyblue"
+             *     ]
+             */
+            colors?: string[];
+            /**
+             * @example [
+             *       "S",
+             *       "M",
+             *       "L"
+             *     ]
+             */
+            sizes?: string[];
+            /**
              * @example {
              *       "roast": "Medium",
              *       "origin": "Guatemala"
@@ -392,10 +437,18 @@ export interface components {
              * @example 1
              */
             quantity: number;
+            /** @example Large */
+            size?: string;
+            /** @example White */
+            color?: string;
         };
         UpdateCartItemDto: {
             /** @example 2 */
             quantity: number;
+            /** @example Large */
+            size?: string;
+            /** @example White */
+            color?: string;
         };
         CreateOrderDto: {
             /** @example Delivery to my home */
@@ -790,7 +843,10 @@ export interface operations {
     };
     CartController_removeItem: {
         parameters: {
-            query?: never;
+            query: {
+                size: string;
+                color: string;
+            };
             header?: never;
             path: {
                 productId: number;
