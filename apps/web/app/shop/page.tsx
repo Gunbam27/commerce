@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import FilterSidebar from "../../features/products/components/FilterSidebar";
 import ProductList from "../../features/products/components/ProductList";
 import { ChevronRight, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { ProductFilters } from "../../features/products/api/useProducts";
 import { useSearchParams } from "next/navigation";
 
-export default function ShopPage() {
+function ShopContent() {
     const searchParams = useSearchParams();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filters, setFilters] = useState<ProductFilters>({
@@ -82,5 +82,13 @@ export default function ShopPage() {
                 </div>
             </div>
         </main>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<div className="container py-10 text-center">Loading...</div>}>
+            <ShopContent />
+        </Suspense>
     );
 }

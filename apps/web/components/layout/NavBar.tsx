@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Logo from "../common/Logo";
 import { ChevronDown, CircleUserRound, Search, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCartManage } from "@/features/cart/hooks/useCartManage";
 
-export default function NavBar() {
+function NavBarContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { items } = useCartManage();
@@ -108,5 +108,13 @@ export default function NavBar() {
                 </div>
             )}
         </nav>
+    );
+}
+
+export default function NavBar() {
+    return (
+        <Suspense fallback={<div className="w-full h-[64px] md:h-[88px] bg-white border-b border-gray-100" />}>
+            <NavBarContent />
+        </Suspense>
     );
 }

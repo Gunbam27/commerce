@@ -121,7 +121,7 @@ export default function ProductDetailPage() {
                         <span className="text-3xl font-bold">${product.price}</span>
                     </div>
                     <p className="text-gray-600 mb-8 pb-8 border-b border-gray-100 leading-relaxed">
-                        {product.description || "No description available."}
+                        {String(product.description || "No description available.")}
                     </p>
 
                     {/* Color selection */}
