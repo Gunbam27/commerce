@@ -15,7 +15,7 @@ export default function Footer() {
                             <a href="#" className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all">
                                 <Twitter size={16} fill="currentColor" />
                             </a>
-                            <a href="#" className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center border border-black hover:bg-white hover:text-black transition-all">
+                            <a href="#" className="w-8 h-8 rounded-full bg-white text-white flex items-center justify-center border border-black hover:bg-white hover:text-black transition-all">
                                 <Facebook size={16} fill="currentColor" />
                             </a>
                             <a href="#" className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all">

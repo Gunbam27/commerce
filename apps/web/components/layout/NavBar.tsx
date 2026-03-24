@@ -43,7 +43,7 @@ function NavBarContent() {
 
                 {/* Desktop Menu Links */}
                 <ul className="hidden lg:flex items-center gap-10">
-                    <li className="text-black text-sm cursor-pointer hover:font-bold transition-all"><Link href="/shop" className="flex items-center gap-1">Shop <ChevronDown size={14} /></Link></li>
+                    <li className="text-black text-sm cursor-pointer hover:font-bold transition-all"><Link href="/shop" className="flex items-center gap-1">Shop</Link></li>
                     <li className="text-black text-sm cursor-pointer hover:font-bold transition-all"><Link href="/shop">On Sale</Link></li>
                     <li className="text-black text-sm cursor-pointer hover:font-bold transition-all"><Link href="/shop">New Arrivals</Link></li>
                     <li className="text-black text-sm cursor-pointer hover:font-bold transition-all"><Link href="/shop">Brands</Link></li>
